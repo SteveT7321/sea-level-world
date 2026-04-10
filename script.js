@@ -26,7 +26,7 @@ const SCENARIO_COLORS = {
 
 const COUNTRIES_CONFIG = [
   {
-    id: 'bangladesh', name: 'Bangladesh', flag: '🇧🇩', rank: 1,
+    id: 'bangladesh', flagCode: 'bd', name: 'Bangladesh', flag: '🇧🇩', rank: 1,
     mapCenter: [23.0, 90.3], mapZoom: 7,
     trendRate: 0.80,          // cm/yr — combined SLR + delta subsidence
     seasonalAmplitude: 14, seasonalPeakMonth: 9, // monsoon peak
@@ -59,7 +59,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'maldives', name: 'Maldives', flag: '🇲🇻', rank: 2,
+    id: 'maldives', flagCode: 'mv', name: 'Maldives', flag: '🇲🇻', rank: 2,
     mapCenter: [3.2, 73.2], mapZoom: 7,
     trendRate: 0.45,
     seasonalAmplitude: 8, seasonalPeakMonth: 11,
@@ -90,7 +90,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'tuvalu', name: 'Tuvalu', flag: '🇹🇻', rank: 3,
+    id: 'tuvalu', flagCode: 'tv', name: 'Tuvalu', flag: '🇹🇻', rank: 3,
     mapCenter: [-8.5, 179.2], mapZoom: 9,
     trendRate: 0.50,
     seasonalAmplitude: 7, seasonalPeakMonth: 2,
@@ -119,7 +119,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'kiribati', name: 'Kiribati', flag: '🇰🇮', rank: 4,
+    id: 'kiribati', flagCode: 'ki', name: 'Kiribati', flag: '🇰🇮', rank: 4,
     mapCenter: [1.3, 173.0], mapZoom: 8,
     trendRate: 0.48,
     seasonalAmplitude: 8, seasonalPeakMonth: 2,
@@ -147,7 +147,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'marshall', name: 'Marshall Islands', flag: '🇲🇭', rank: 5,
+    id: 'marshall', flagCode: 'mh', name: 'Marshall Islands', flag: '🇲🇭', rank: 5,
     mapCenter: [7.1, 171.2], mapZoom: 8,
     trendRate: 0.52,
     seasonalAmplitude: 7, seasonalPeakMonth: 11,
@@ -175,7 +175,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'vietnam', name: 'Vietnam', flag: '🇻🇳', rank: 6,
+    id: 'vietnam', flagCode: 'vn', name: 'Vietnam', flag: '🇻🇳', rank: 6,
     mapCenter: [10.5, 106.5], mapZoom: 6,
     trendRate: 0.35,
     seasonalAmplitude: 12, seasonalPeakMonth: 10,
@@ -206,7 +206,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'netherlands', name: 'Netherlands', flag: '🇳🇱', rank: 7,
+    id: 'netherlands', flagCode: 'nl', name: 'Netherlands', flag: '🇳🇱', rank: 7,
     mapCenter: [52.3, 5.3], mapZoom: 7,
     trendRate: 0.28,
     seasonalAmplitude: 6, seasonalPeakMonth: 11,
@@ -236,7 +236,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'egypt', name: 'Egypt (Nile Delta)', flag: '🇪🇬', rank: 8,
+    id: 'egypt', flagCode: 'eg', name: 'Egypt (Nile Delta)', flag: '🇪🇬', rank: 8,
     mapCenter: [30.8, 31.0], mapZoom: 8,
     trendRate: 0.25,
     seasonalAmplitude: 5, seasonalPeakMonth: 11,
@@ -265,7 +265,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'myanmar', name: 'Myanmar', flag: '🇲🇲', rank: 9,
+    id: 'myanmar', flagCode: 'mm', name: 'Myanmar', flag: '🇲🇲', rank: 9,
     mapCenter: [16.2, 96.0], mapZoom: 7,
     trendRate: 0.38,
     seasonalAmplitude: 13, seasonalPeakMonth: 9,
@@ -294,7 +294,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'thailand', name: 'Thailand', flag: '🇹🇭', rank: 10,
+    id: 'thailand', flagCode: 'th', name: 'Thailand', flag: '🇹🇭', rank: 10,
     mapCenter: [13.5, 100.5], mapZoom: 8,
     trendRate: 0.32,
     seasonalAmplitude: 11, seasonalPeakMonth: 10,
@@ -323,7 +323,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'india', name: 'India', flag: '🇮🇳', rank: 11,
+    id: 'india', flagCode: 'in', name: 'India', flag: '🇮🇳', rank: 11,
     mapCenter: [20.0, 82.0], mapZoom: 5,
     trendRate: 0.30,
     seasonalAmplitude: 10, seasonalPeakMonth: 9,
@@ -355,7 +355,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'china', name: 'China', flag: '🇨🇳', rank: 12,
+    id: 'china', flagCode: 'cn', name: 'China', flag: '🇨🇳', rank: 12,
     mapCenter: [31.2, 121.5], mapZoom: 6,
     trendRate: 0.35,
     seasonalAmplitude: 9, seasonalPeakMonth: 9,
@@ -386,7 +386,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'indonesia', name: 'Indonesia', flag: '🇮🇩', rank: 13,
+    id: 'indonesia', flagCode: 'id', name: 'Indonesia', flag: '🇮🇩', rank: 13,
     mapCenter: [-6.2, 106.8], mapZoom: 6,
     trendRate: 0.40,
     seasonalAmplitude: 10, seasonalPeakMonth: 1,
@@ -416,7 +416,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'philippines', name: 'Philippines', flag: '🇵🇭', rank: 14,
+    id: 'philippines', flagCode: 'ph', name: 'Philippines', flag: '🇵🇭', rank: 14,
     mapCenter: [12.0, 122.0], mapZoom: 6,
     trendRate: 0.38,
     seasonalAmplitude: 11, seasonalPeakMonth: 10,
@@ -445,7 +445,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'pakistan', name: 'Pakistan', flag: '🇵🇰', rank: 15,
+    id: 'pakistan', flagCode: 'pk', name: 'Pakistan', flag: '🇵🇰', rank: 15,
     mapCenter: [24.5, 67.2], mapZoom: 8,
     trendRate: 0.30,
     seasonalAmplitude: 8, seasonalPeakMonth: 8,
@@ -474,7 +474,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'cambodia', name: 'Cambodia', flag: '🇰🇭', rank: 16,
+    id: 'cambodia', flagCode: 'kh', name: 'Cambodia', flag: '🇰🇭', rank: 16,
     mapCenter: [11.5, 104.9], mapZoom: 8,
     trendRate: 0.33,
     seasonalAmplitude: 12, seasonalPeakMonth: 10,
@@ -503,7 +503,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'nigeria', name: 'Nigeria', flag: '🇳🇬', rank: 17,
+    id: 'nigeria', flagCode: 'ng', name: 'Nigeria', flag: '🇳🇬', rank: 17,
     mapCenter: [5.3, 5.5], mapZoom: 8,
     trendRate: 0.30,
     seasonalAmplitude: 9, seasonalPeakMonth: 9,
@@ -532,7 +532,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'mozambique', name: 'Mozambique', flag: '🇲🇿', rank: 18,
+    id: 'mozambique', flagCode: 'mz', name: 'Mozambique', flag: '🇲🇿', rank: 18,
     mapCenter: [-18.5, 35.5], mapZoom: 7,
     trendRate: 0.28,
     seasonalAmplitude: 9, seasonalPeakMonth: 3,
@@ -561,7 +561,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'japan', name: 'Japan', flag: '🇯🇵', rank: 19,
+    id: 'japan', flagCode: 'jp', name: 'Japan', flag: '🇯🇵', rank: 19,
     mapCenter: [36.5, 137.0], mapZoom: 5,
     trendRate: 0.22,          // cm/yr — JMA Aburatubo reference
     seasonalAmplitude: 9, seasonalPeakMonth: 9, // autumn peak
@@ -596,7 +596,7 @@ const COUNTRIES_CONFIG = [
     ]},
   },
   {
-    id: 'taiwan', name: 'Taiwan', flag: '🇹🇼', rank: 20,
+    id: 'taiwan', flagCode: 'tw', name: 'Taiwan', flag: '🇹🇼', rank: 20,
     mapCenter: [23.6, 121.2], mapZoom: 8,
     trendRate: 0.32,          // cm/yr — Keelung station
     seasonalAmplitude: 8, seasonalPeakMonth: 6, // summer peak
@@ -1087,7 +1087,7 @@ function buildCountryList() {
     li.dataset.id = country.id;
     if (country.id === activeCountry.id) li.classList.add('active');
     li.innerHTML =
-      `<span class="li-flag">${country.flag}</span>` +
+      `<span class="li-flag fi fi-${country.flagCode}"></span>` +
       `<span class="li-name">${country.name}</span>` +
       `<span class="li-rank">#${country.rank}</span>`;
     li.addEventListener('click', () => {
@@ -1156,10 +1156,13 @@ function updateScenarioTabs() {
 }
 
 function updateCountrySelectorUI() {
-  document.getElementById('country-flag').textContent = activeCountry.flag;
+  const flagEl = document.getElementById('country-flag');
+  flagEl.className = `fi fi-${activeCountry.flagCode}`;
+  flagEl.textContent = '';
   document.getElementById('country-name').textContent = activeCountry.name;
   document.getElementById('country-rank').textContent = `#${activeCountry.rank}`;
-  document.getElementById('headerBadge').textContent  = activeCountry.flag;
+  const headerBadge = document.getElementById('headerBadge');
+  headerBadge.innerHTML = `<span class="fi fi-${activeCountry.flagCode}"></span>`;
   document.getElementById('countryDesc').textContent  = activeCountry.description;
 }
 
@@ -1195,6 +1198,9 @@ function bindEvents() {
       state.scenario = btn.dataset.scenario;
       const descEl = document.getElementById('scenarioDesc');
       if (descEl) descEl.textContent = btn.dataset.desc || '';
+      const icons = { ssp126:'🟢', ssp245:'🟡', ssp585:'🟠', ssp_extreme:'🔴', ssp_catastrophe:'🟣' };
+      const iconEl = document.getElementById('scenarioDescIcon');
+      if (iconEl) iconEl.textContent = icons[state.scenario] || '🟢';
       updateChart();
       updateFloodLayer();
       updateStats();
