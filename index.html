@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Sea Level Rise Observatory</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="wave-bg">
+    <svg class="wave wave-1" viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path d="M0,60 C240,100 480,20 720,60 C960,100 1200,20 1440,60 L1440,120 L0,120 Z" />
+    </svg>
+    <svg class="wave wave-2" viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,20 1440,40 L1440,120 L0,120 Z" />
+    </svg>
+  </div>
+
+  <div class="app">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-icon">🌊</span>
+        <div>
+          <div class="brand-title">Global Sea Level Rise Observatory</div>
+          <div class="brand-sub">Top 20 High-Risk Nations · 2000–2100</div>
+        </div>
+      </div>
+      <div class="badges">
+        <span class="badge badge-flag" id="headerBadge">🇧🇩</span>
+        <span class="badge">IPCC AR6</span>
+      </div>
+    </header>
+
+    <!-- Scenario selector bar -->
+    <div class="scenario-bar">
+      <button class="scenario-tab active" data-scenario="ssp126"
+        data-desc="Strong global climate action, renewables widely adopted. Coastal flooding risk remains but is manageable with robust adaptation measures.">
+        <span class="tab-dot dot-green"></span>
+        <span class="tab-name">Optimistic SSP1-2.6</span>
+        <span class="tab-rise" id="rise-ssp126">+70 cm</span>
+      </button>
+      <button class="scenario-tab" data-scenario="ssp245"
+        data-desc="Moderate policies, partial decarbonization. Current most-likely trajectory — significant coastal flood risk by 2100 without major adaptation.">
+        <span class="tab-dot dot-amber"></span>
+        <span class="tab-name">Moderate SSP2-4.5</span>
+        <span class="tab-rise" id="rise-ssp245">+120 cm</span>
+      </button>
+      <button class="scenario-tab" data-scenario="ssp585"
+        data-desc="High fossil fuel use, near-zero mitigation. Rapid sea level acceleration in second half of century, large-scale permanent inundation.">
+        <span class="tab-dot dot-red"></span>
+        <span class="tab-name">Pessimistic SSP5-8.5</span>
+        <span class="tab-rise" id="rise-ssp585">+180 cm</span>
+      </button>
+      <button class="scenario-tab" data-scenario="ssp_extreme"
+        data-desc="High emissions combined with partial West Antarctic Ice Sheet instability. Catastrophic and widespread permanent flooding of coastal lowlands.">
+        <span class="tab-dot dot-purple"></span>
+        <span class="tab-name">High-end SSP5+</span>
+        <span class="tab-rise" id="rise-ssp_extreme">+250 cm</span>
+      </button>
+      <button class="scenario-tab" data-scenario="ssp_catastrophe"
+        data-desc="Full collapse of Greenland and Antarctic ice sheets. Hundreds of millions displaced; civilisation-scale impact on low-lying nations.">
+        <span class="tab-dot dot-darkpurple"></span>
+        <span class="tab-name">Ice Sheet Collapse</span>
+        <span class="tab-rise" id="rise-ssp_catastrophe">+380 cm</span>
+      </button>
+      <div class="scenario-desc" id="scenarioDesc">
+        Strong global climate action, renewables widely adopted. Coastal flooding risk remains but is manageable with robust adaptation measures.
+      </div>
+    </div>
+
+    <!-- Main workspace -->
+    <div class="workspace">
+
+      <!-- Map (DOM first, mobile stacks on top) -->
+      <section class="map-section">
+
+        <!-- Country selector — floating overlay on top of map -->
+        <div id="country-dropdown" class="country-dropdown country-map-overlay">
+          <button id="country-trigger" class="country-trigger" aria-haspopup="listbox" aria-expanded="false">
+            <span id="country-flag">🇧🇩</span>
+            <span id="country-name">Bangladesh</span>
+            <span id="country-rank" class="rank-badge">#1</span>
+            <span class="chevron">▾</span>
+          </button>
+          <div id="countryDesc" class="country-map-desc">Ganges–Brahmaputra–Meghna delta · 80% of land below 5m</div>
+          <ul id="country-list" class="country-list" role="listbox" aria-label="Select country"></ul>
+        </div>
+
+        <!-- Map tiles (wrapped to allow rounded clipping without blocking dropdown) -->
+        <div class="map-clip">
+          <div id="map"></div>
+        </div>
+
+        <div class="map-hud">
+          <span id="mapSeaLevelBadge" class="hud-badge hud-level">Sea Level +0 cm</span>
+          <span id="mapModeBadge" class="hud-badge mode-history">Historical</span>
+        </div>
+        <div class="map-legend">
+          <div class="legend-title">Flood Depth</div>
+          <div class="legend-items">
+            <div class="legend-item"><span class="lc" style="background:rgba(131,24,67,0.55);border-color:#f472b6"></span>0–30 cm Marginal</div>
+            <div class="legend-item"><span class="lc" style="background:rgba(113,63,18,0.55);border-color:#eab308"></span>30–80 cm Moderate</div>
+            <div class="legend-item"><span class="lc" style="background:rgba(124,45,18,0.55);border-color:#f97316"></span>80–150 cm Severe</div>
+            <div class="legend-item"><span class="lc" style="background:rgba(127,29,29,0.55);border-color:#ef4444"></span>&gt;150 cm Critical</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Side panel -->
+      <aside class="side-panel">
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-val" id="statSeaLevel">--</div>
+            <div class="stat-unit">cm</div>
+            <div class="stat-lbl">Sea Level Anomaly</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="statRate">--</div>
+            <div class="stat-unit">mm/yr</div>
+            <div class="stat-lbl">Rise Rate</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="statArea">--</div>
+            <div class="stat-unit">km²</div>
+            <div class="stat-lbl">Flood Area</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="statPop">--</div>
+            <div class="stat-unit">M people</div>
+            <div class="stat-lbl">At-Risk Pop.</div>
+          </div>
+        </div>
+
+        <div class="panel-box chart-box">
+          <div class="box-title">
+            Sea Level Trend
+            <span class="box-sub" id="currentDateDisplay">Loading...</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="seaLevelChart"></canvas>
+          </div>
+        </div>
+
+        <div class="panel-box cities-box">
+          <div class="box-title">Threatened Areas</div>
+          <div class="cities-list" id="citiesList">—</div>
+        </div>
+
+      </aside>
+
+    </div>
+
+    <!-- Unified control bar -->
+    <div class="control-bar">
+      <div class="playback-btns">
+        <button class="ctrl-btn" id="btnRewind" title="Jump to start">⏮</button>
+        <button class="ctrl-btn play-btn" id="btnPlay" title="Play/Pause">▶</button>
+        <button class="ctrl-btn" id="btnFastFwd" title="Jump to end">⏭</button>
+      </div>
+
+      <div class="gran-group">
+        <button class="gran-btn active" data-gran="1y">1yr</button>
+        <button class="gran-btn" data-gran="5y">5yr</button>
+        <button class="gran-btn" data-gran="10y">10yr</button>
+      </div>
+
+      <div class="timeline-track">
+        <div class="timeline-labels">
+          <span>2000</span><span>2010</span><span>2020</span>
+          <span class="label-today">Today</span>
+          <span>2040</span><span>2050</span><span>2060</span>
+          <span>2070</span><span>2080</span><span>2090</span><span>2100</span>
+        </div>
+        <div class="slider-wrapper">
+          <div class="slider-track-bg">
+            <div class="slider-track-history" id="sliderTrackHistory"></div>
+            <div class="slider-track-future"></div>
+            <div class="today-marker" id="todayMarker"></div>
+          </div>
+          <input type="range" id="timeSlider" class="time-slider"
+            min="0" max="100" value="25" step="1" />
+        </div>
+        <div class="time-display"><span id="timeDisplayText">Loading...</span></div>
+      </div>
+
+      <div class="speed-group">
+        <span class="speed-lbl">Speed</span>
+        <select id="playSpeed" class="speed-sel">
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+          <option value="5">5×</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
