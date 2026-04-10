@@ -2,7 +2,9 @@
 
 Interactive visualization of sea level rise projections for the **top 20 highest flood-risk nations**, covering 2000–2100 under five IPCC AR6 climate scenarios.
 
-**Live demo:** open `index.html` directly in any browser — no server required.
+**🔗 Live demo:** [stevet7321.github.io/sea-level-world](https://stevet7321.github.io/sea-level-world/)
+
+> Or clone the repo and open `index.html` directly in any browser — no server required.
 
 ---
 
