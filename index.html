@@ -8,7 +8,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.6.6/css/flag-icons.min.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -34,7 +33,7 @@
         </div>
       </div>
       <div class="badges">
-        <span class="badge badge-flag" id="headerBadge"><span class="fi fi-bd"></span></span>
+        <span class="badge badge-flag" id="headerBadge"><img class="flag-img-sm" src="https://flagcdn.com/w40/bd.png" alt="" /></span>
         <span class="badge">IPCC AR6</span>
       </div>
     </header>
@@ -75,7 +74,7 @@
 
     <!-- Scenario description bar -->
     <div class="scenario-desc-bar">
-      <span class="scenario-desc-icon" id="scenarioDescIcon">🟢</span>
+      <span class="scenario-desc-icon" id="scenarioDescIcon" data-scenario="ssp126"></span>
       <span id="scenarioDesc">Strong global climate action, renewables widely adopted. Coastal flooding risk remains but is manageable with robust adaptation measures.</span>
     </div>
 
@@ -88,7 +87,7 @@
         <!-- Country selector — floating overlay on top of map -->
         <div id="country-dropdown" class="country-dropdown country-map-overlay">
           <button id="country-trigger" class="country-trigger" aria-haspopup="listbox" aria-expanded="false">
-            <span id="country-flag" class="fi fi-bd"></span>
+            <img id="country-flag" class="flag-img" src="https://flagcdn.com/w40/bd.png" alt="Bangladesh" />
             <span id="country-name">Bangladesh</span>
             <span id="country-rank" class="rank-badge">#1</span>
             <span class="chevron">▾</span>

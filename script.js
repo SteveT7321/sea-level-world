@@ -1087,7 +1087,7 @@ function buildCountryList() {
     li.dataset.id = country.id;
     if (country.id === activeCountry.id) li.classList.add('active');
     li.innerHTML =
-      `<span class="li-flag fi fi-${country.flagCode}"></span>` +
+      `<img class="li-flag-img" src="https://flagcdn.com/w40/${country.flagCode}.png" alt="${country.name}" />` +
       `<span class="li-name">${country.name}</span>` +
       `<span class="li-rank">#${country.rank}</span>`;
     li.addEventListener('click', () => {
@@ -1157,13 +1157,13 @@ function updateScenarioTabs() {
 
 function updateCountrySelectorUI() {
   const flagEl = document.getElementById('country-flag');
-  flagEl.className = `fi fi-${activeCountry.flagCode}`;
-  flagEl.textContent = '';
+  flagEl.src = `https://flagcdn.com/w40/${activeCountry.flagCode}.png`;
+  flagEl.alt = activeCountry.name;
   document.getElementById('country-name').textContent = activeCountry.name;
   document.getElementById('country-rank').textContent = `#${activeCountry.rank}`;
-  const headerBadge = document.getElementById('headerBadge');
-  headerBadge.innerHTML = `<span class="fi fi-${activeCountry.flagCode}"></span>`;
-  document.getElementById('countryDesc').textContent  = activeCountry.description;
+  document.getElementById('headerBadge').innerHTML =
+    `<img class="flag-img-sm" src="https://flagcdn.com/w40/${activeCountry.flagCode}.png" alt="${activeCountry.name}" />`;
+  document.getElementById('countryDesc').textContent = activeCountry.description;
 }
 
 /* ================================================================
@@ -1198,9 +1198,8 @@ function bindEvents() {
       state.scenario = btn.dataset.scenario;
       const descEl = document.getElementById('scenarioDesc');
       if (descEl) descEl.textContent = btn.dataset.desc || '';
-      const icons = { ssp126:'🟢', ssp245:'🟡', ssp585:'🟠', ssp_extreme:'🔴', ssp_catastrophe:'🟣' };
       const iconEl = document.getElementById('scenarioDescIcon');
-      if (iconEl) iconEl.textContent = icons[state.scenario] || '🟢';
+      if (iconEl) iconEl.dataset.scenario = state.scenario;
       updateChart();
       updateFloodLayer();
       updateStats();
