@@ -640,6 +640,7 @@ const COUNTRIES_CONFIG = [
 /* ---- Active country & State ---- */
 let activeCountry = COUNTRIES_CONFIG[0]; // default: Bangladesh
 let realHistoricalData = {}; // populated from data/historical.json if available
+let realElevationData  = {}; // cache: country_id → GeoJSON (loaded from data/elevation/{id}.geojson)
 
 let state = {
   scenario:    'ssp126',
@@ -908,7 +909,23 @@ function updateChartCurrentLine(sliderVal) {
    4. Leaflet Map + Flood Layer
    ================================================================ */
 
-function initMap() {
+async function loadElevationGeoJson(country) {
+  // Return cached if available
+  if (realElevationData[country.id]) return realElevationData[country.id];
+  try {
+    const res = await fetch(`data/elevation/${country.id}.geojson`);
+    if (res.ok) {
+      const gj = await res.json();
+      realElevationData[country.id] = gj;
+      console.log(`[sea-level] Loaded real elevation: ${country.id}`);
+      return gj;
+    }
+  } catch { /* fall through */ }
+  // Fallback to inline approximate polygons from COUNTRIES_CONFIG
+  return country.elevationBands;
+}
+
+async function initMap() {
   state.map = L.map('map', {
     center: activeCountry.mapCenter,
     zoom:   activeCountry.mapZoom,
@@ -919,7 +936,8 @@ function initMap() {
     maxZoom: 18, subdomains: 'abcd',
   }).addTo(state.map);
   L.control.attribution({ prefix: '' }).addTo(state.map);
-  applyElevationGeoJson(activeCountry.elevationBands);
+  const geoJson = await loadElevationGeoJson(activeCountry);
+  applyElevationGeoJson(geoJson);
 }
 
 function applyElevationGeoJson(geoJson) {
@@ -1139,7 +1157,7 @@ function toggleCountryDropdown() {
   else openCountryDropdown();
 }
 
-function switchCountry(id) {
+async function switchCountry(id) {
   if (id === activeCountry.id) return;
   if (state.isPlaying) stopPlay();
 
@@ -1154,7 +1172,8 @@ function switchCountry(id) {
     state.map.removeLayer(state.floodLayer);
     state.floodLayer = null;
   }
-  applyElevationGeoJson(activeCountry.elevationBands);
+  const geoJson = await loadElevationGeoJson(activeCountry);
+  applyElevationGeoJson(geoJson);
 
   // Rebuild chart
   if (state.chart) { state.chart.destroy(); state.chart = null; }
@@ -1259,7 +1278,7 @@ function bindEvents() {
    9. Initialization
    ================================================================ */
 
-function init() {
+async function init() {
   // Generate data
   state.data = generateAllData();
 
@@ -1276,8 +1295,8 @@ function init() {
   // Init chart
   initChart();
 
-  // Init map
-  initMap();
+  // Init map (async: loads real elevation GeoJSON if available)
+  await initMap();
 
   // Bind events
   bindEvents();
@@ -1303,5 +1322,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (e) {
     console.log('[sea-level] No data/historical.json found, using synthetic data');
   }
-  init();
+  await init();
 });
