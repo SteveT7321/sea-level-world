@@ -84,7 +84,8 @@ python -m http.server 8080
 | **Country button** (floating, top-center of map) | Switch between 20 countries |
 | **Scenario tabs** | Change climate projection |
 | **Description bar** | Shows scenario summary + color dot |
-| **▶ Play** | Animate timeline 2000 → 2100 |
+| **▶ Play / ⏸ Pause** | Animate timeline 2000 → 2100 |
+| **↺ Restart** (appears at 2100) | Rewind to 2000 and replay |
 | **Timeline slider** | Jump to any point in time |
 | **1yr / 5yr / 10yr** | Playback step size |
 | **Speed** | 0.5× to 5× |
