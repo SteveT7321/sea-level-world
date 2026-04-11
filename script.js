@@ -639,6 +639,7 @@ const COUNTRIES_CONFIG = [
 
 /* ---- Active country & State ---- */
 let activeCountry = COUNTRIES_CONFIG[0]; // default: Bangladesh
+let realHistoricalData = {}; // populated from data/historical.json if available
 
 let state = {
   scenario:    'ssp126',
@@ -673,9 +674,33 @@ function generateAllData() {
 }
 
 function generateHistoricalData() {
+  const real = realHistoricalData[activeCountry.id];
+  if (real && real.length > 0) {
+    // Use real tide-gauge data from START_YEAR onwards
+    const data = real.filter(d => d.year >= START_YEAR);
+    if (data.length > 0) {
+      // If real data ends before today, extend with trend-only projection to avoid chart gap
+      const last = data[data.length - 1];
+      const lastMark  = last.year * 12 + last.month;
+      const todayMark = TODAY_YEAR * 12 + 3; // March 2025
+      if (lastMark < todayMark) {
+        let { year, month, value } = last;
+        month++;
+        if (month > 12) { month = 1; year++; }
+        while (year < TODAY_YEAR || (year === TODAY_YEAR && month <= 3)) {
+          value += activeCountry.trendRate / 12;
+          data.push({ year, month, value: parseFloat(value.toFixed(2)) });
+          month++;
+          if (month > 12) { month = 1; year++; }
+        }
+      }
+      return data;
+    }
+  }
+  // Synthetic fallback (used when no real data available for this country)
   const data = [];
   const trendRate = activeCountry.trendRate;
-  let year = 2000, month = 1;
+  let year = START_YEAR, month = 1;
   while (year < TODAY_YEAR || (year === TODAY_YEAR && month <= 3)) {
     const t = year + (month - 0.5) / 12;
     const trend = (t - 1990) * trendRate;
@@ -1263,4 +1288,20 @@ function init() {
   updateStats();
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', async () => {
+  // Try to load real historical data; silently fall back to synthetic if unavailable
+  try {
+    const res = await fetch('data/historical.json');
+    if (res.ok) {
+      const json = await res.json();
+      // Strip _meta key; remaining keys are country ids → [{year,month,value}]
+      const { _meta, ...countries } = json;
+      realHistoricalData = countries;
+      const loaded = Object.keys(countries).length;
+      console.log(`[sea-level] Loaded real historical data for ${loaded} countries`);
+    }
+  } catch (e) {
+    console.log('[sea-level] No data/historical.json found, using synthetic data');
+  }
+  init();
+});
