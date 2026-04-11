@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 process_dem.py — 從 SRTM GL1 (30m) DEM 生成全球 20 個高風險國家的沿海高程帶 GeoJSON
 
@@ -30,10 +31,16 @@ DEM 資料下載（一次性）：
 
 import sys
 import os
+import io
 import json
 import math
 import argparse
 import numpy as np
+
+# Force UTF-8 output on Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 from pathlib import Path
 
 try:
