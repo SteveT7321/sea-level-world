@@ -1087,13 +1087,14 @@ function onSliderChange() {
   updateFloodLayer();
   updateStats();
   updateChartCurrentLine(state.sliderValue);
+  updatePlayButton();
 }
 
 function startPlay() {
   if (state.isPlaying) return;
   state.isPlaying = true;
-  document.getElementById('btnPlay').textContent = '⏸';
   document.getElementById('btnPlay').classList.add('playing');
+  updatePlayButton();
   const step = getPlayStep();
   state.playTimer = setInterval(() => {
     state.sliderValue = Math.min(100, state.sliderValue + step);
@@ -1105,11 +1106,22 @@ function startPlay() {
   }, 100);
 }
 
+function updatePlayButton() {
+  const btn = document.getElementById('btnPlay');
+  if (state.sliderValue >= 100) {
+    btn.textContent = '↺';
+    btn.title = 'Restart';
+  } else {
+    btn.textContent = state.isPlaying ? '⏸' : '▶';
+    btn.title = state.isPlaying ? 'Pause' : 'Play';
+  }
+}
+
 function stopPlay() {
   state.isPlaying = false;
   clearInterval(state.playTimer);
-  document.getElementById('btnPlay').textContent = '▶';
   document.getElementById('btnPlay').classList.remove('playing');
+  updatePlayButton();
 }
 
 function getPlayStep() {
@@ -1219,7 +1231,17 @@ function bindEvents() {
   document.getElementById('timeSlider').addEventListener('change', onSliderChange);
 
   document.getElementById('btnPlay').addEventListener('click', () => {
-    if (state.isPlaying) stopPlay(); else startPlay();
+    if (state.isPlaying) {
+      stopPlay();
+    } else if (state.sliderValue >= 100) {
+      // Restart from beginning
+      state.sliderValue = 0;
+      document.getElementById('timeSlider').value = 0;
+      onSliderChange();
+      startPlay();
+    } else {
+      startPlay();
+    }
   });
   document.getElementById('btnRewind').addEventListener('click', () => {
     stopPlay(); state.sliderValue = 0;
