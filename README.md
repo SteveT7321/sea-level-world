@@ -144,3 +144,7 @@ All per-country parameters — map center/zoom, trend rate, seasonal params, SSP
 | Myanmar | — | synthetic fallback |
 | Cambodia | — | synthetic fallback |
 | Nigeria | — | synthetic fallback |
+
+> **Synthetic fallback** — countries without a usable PSMSL station have their historical sea level curve generated mathematically:
+> `value = trend + seasonal + interannual + noise`
+> where `trend` is a linear rise from 1990 at the country's IPCC AR6 regional rate, `seasonal` is a sinusoidal annual cycle, `interannual` models ENSO variability (3.7-yr and 7.1-yr periods), and `noise` is deterministic pseudo-random. Parameters are set per-country in `COUNTRIES_CONFIG` inside `script.js`. The resulting curve is physically plausible but **not observational data**.
